@@ -1,0 +1,70 @@
+<!--pages/chat-list/chat-list.wxml-->
+<view class="chat-list-container">
+  <!-- 搜索栏 -->
+  <view class="search-section">
+    <van-search
+      value="{{searchKeyword}}"
+      placeholder="搜索联系人"
+      bind:search="onSearch"
+      bind:input="onSearchInput"
+      bind:clear="onSearchClear"
+    />
+  </view>
+
+  <!-- 聊天列表 -->
+  <view class="chat-list">
+    <view wx:if="{{loading}}" class="loading-section">
+      <van-loading type="spinner" size="48rpx" />
+      <text>加载中...</text>
+    </view>
+    
+    <view wx:elif="{{chatList.length === 0}}" class="empty-section">
+      <van-empty description="暂无聊天记录" />
+      <van-button type="primary" size="small" bindtap="goToTaskList">
+        去看看任务
+      </van-button>
+    </view>
+    
+    <view wx:else>
+      <view 
+        class="chat-item" 
+        wx:for="{{filteredChatList}}" 
+        wx:key="chatId"
+        bindtap="goToChat"
+        data-chat="{{item}}"
+      >
+        <view class="chat-avatar">
+          <image src="{{item.avatar || '/images/default-avatar.png'}}" mode="aspectFill" />
+          <view wx:if="{{item.unreadCount > 0}}" class="unread-badge">
+            {{item.unreadCount > 99 ? '99+' : item.unreadCount}}
+          </view>
+        </view>
+        
+        <view class="chat-content">
+          <view class="chat-header">
+            <view class="chat-name">
+              <text>{{item.name}}</text>
+              <van-tag wx:if="{{item.isVerified}}" size="small" type="success" plain>已认证</van-tag>
+            </view>
+            <view class="chat-time">{{item.lastMessageTime}}</view>
+          </view>
+          
+          <view class="chat-preview">
+            <view class="last-message">
+              <van-icon wx:if="{{item.lastMessage.type === 'image'}}" name="photo-o" size="28rpx" />
+              <text>{{item.lastMessage.content}}</text>
+            </view>
+            <view wx:if="{{item.taskInfo}}" class="task-tag">
+              <van-tag size="small" type="primary" plain>{{item.taskInfo.title}}</van-tag>
+            </view>
+          </view>
+        </view>
+        
+        <van-icon name="arrow" size="24rpx" color="#C4C4C4" />
+      </view>
+    </view>
+  </view>
+</view>
+
+<!-- Toast组件 -->
+<van-toast id="van-toast" />
