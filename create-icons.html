@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>生成TabBar图标</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; }
+        .icon-container { margin: 20px 0; }
+        canvas { border: 1px solid #ccc; margin: 10px; }
+        button { padding: 10px 20px; margin: 10px; background: #36D399; color: white; border: none; border-radius: 5px; cursor: pointer; }
+        .download-section { margin: 20px 0; padding: 20px; background: #f5f5f5; border-radius: 8px; }
+    </style>
+</head>
+<body>
+    <h1>TabBar图标生成器</h1>
+    <p>点击下面的按钮生成并下载所需的图标文件</p>
+    
+    <div class="download-section">
+        <h3>生成的图标预览：</h3>
+        <div id="preview"></div>
+        <button onclick="generateAllIcons()">生成所有图标</button>
+    </div>
+
+    <script>
+        // 创建64x64的canvas
+        function createCanvas() {
+            const canvas = document.createElement('canvas');
+            canvas.width = 64;
+            canvas.height = 64;
+            return canvas;
+        }
+
+        // 绘制首页图标
+        function drawHomeIcon(ctx, active = false) {
+            const color = active ? '#36D399' : '#7A7E83';
+            ctx.clearRect(0, 0, 64, 64);
+            ctx.strokeStyle = color;
+            ctx.fillStyle = color;
+            ctx.lineWidth = 2;
+            
+            if (active) {
+                // 填充版本
+                ctx.beginPath();
+                ctx.moveTo(32, 12);
+                ctx.lineTo(12, 28);
+                ctx.lineTo(12, 52);
+                ctx.lineTo(52, 52);
+                ctx.lineTo(52, 28);
+                ctx.closePath();
+                ctx.fill();
+                
+                // 门
+                ctx.fillStyle = 'white';
+                ctx.fillRect(28, 36, 8, 16);
+            } else {
+                // 线条版本
+                ctx.beginPath();
+                ctx.moveTo(32, 12);
+                ctx.lineTo(12, 28);
+                ctx.lineTo(12, 52);
+                ctx.lineTo(24, 52);
+                ctx.lineTo(24, 36);
+                ctx.lineTo(40, 36);
+                ctx.lineTo(40, 52);
+                ctx.lineTo(52, 52);
+                ctx.lineTo(52, 28);
+                ctx.closePath();
+                ctx.stroke();
+            }
+        }
+
+        // 绘制任务图标
+        function drawTaskIcon(ctx, active = false) {
+            const color = active ? '#36D399' : '#7A7E83';
+            ctx.clearRect(0, 0, 64, 64);
+            ctx.strokeStyle = color;
+            ctx.fillStyle = color;
+            ctx.lineWidth = 2;
+            
+            if (active) {
+                // 填充版本
+                ctx.fillRect(16, 12, 32, 40);
+                ctx.fillStyle = 'white';
+                ctx.fillRect(20, 20, 24, 2);
+                ctx.fillRect(20, 28, 24, 2);
+                ctx.fillRect(20, 36, 16, 2);
+            } else {
+                // 线条版本
+                ctx.strokeRect(16, 12, 32, 40);
+                ctx.beginPath();
+                ctx.moveTo(20, 20);
+                ctx.lineTo(44, 20);
+                ctx.moveTo(20, 28);
+                ctx.lineTo(44, 28);
+                ctx.moveTo(20, 36);
+                ctx.lineTo(36, 36);
+                ctx.stroke();
+            }
+        }
+
+        // 绘制聊天图标
+        function drawChatIcon(ctx, active = false) {
+            const color = active ? '#36D399' : '#7A7E83';
+            ctx.clearRect(0, 0, 64, 64);
+            ctx.strokeStyle = color;
+            ctx.fillStyle = color;
+            ctx.lineWidth = 2;
+            
+            if (active) {
+                // 填充版本
+                ctx.beginPath();
+                ctx.roundRect(12, 16, 40, 24, 8);
+                ctx.fill();
+                ctx.beginPath();
+                ctx.moveTo(20, 40);
+                ctx.lineTo(12, 48);
+                ctx.lineTo(28, 40);
+                ctx.fill();
+                
+                // 圆点
+                ctx.fillStyle = 'white';
+                ctx.beginPath();
+                ctx.arc(24, 28, 2, 0, Math.PI * 2);
+                ctx.arc(32, 28, 2, 0, Math.PI * 2);
+                ctx.arc(40, 28, 2, 0, Math.PI * 2);
+                ctx.fill();
+            } else {
+                // 线条版本
+                ctx.beginPath();
+                ctx.roundRect(12, 16, 40, 24, 8);
+                ctx.stroke();
+                ctx.beginPath();
+                ctx.moveTo(20, 40);
+                ctx.lineTo(12, 48);
+                ctx.lineTo(28, 40);
+                ctx.stroke();
+                
+                // 圆点
+                ctx.beginPath();
+                ctx.arc(24, 28, 2, 0, Math.PI * 2);
+                ctx.arc(32, 28, 2, 0, Math.PI * 2);
+                ctx.arc(40, 28, 2, 0, Math.PI * 2);
+                ctx.fill();
+            }
+        }
+
+        // 绘制个人中心图标
+        function drawProfileIcon(ctx, active = false) {
+            const color = active ? '#36D399' : '#7A7E83';
+            ctx.clearRect(0, 0, 64, 64);
+            ctx.strokeStyle = color;
+            ctx.fillStyle = color;
+            ctx.lineWidth = 2;
+            
+            if (active) {
+                // 填充版本
+                ctx.beginPath();
+                ctx.arc(32, 24, 8, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.beginPath();
+                ctx.arc(32, 48, 20, -Math.PI, 0);
+                ctx.fill();
+            } else {
+                // 线条版本
+                ctx.beginPath();
+                ctx.arc(32, 24, 8, 0, Math.PI * 2);
+                ctx.stroke();
+                ctx.beginPath();
+                ctx.arc(32, 48, 20, -Math.PI, 0);
+                ctx.stroke();
+            }
+        }
+
+        // 下载canvas为PNG
+        function downloadCanvas(canvas, filename) {
+            const link = document.createElement('a');
+            link.download = filename;
+            link.href = canvas.toDataURL();
+            link.click();
+        }
+
+        // 生成所有图标
+        function generateAllIcons() {
+            const icons = [
+                { name: 'home', draw: drawHomeIcon },
+                { name: 'task', draw: drawTaskIcon },
+                { name: 'chat', draw: drawChatIcon },
+                { name: 'profile', draw: drawProfileIcon }
+            ];
+
+            const preview = document.getElementById('preview');
+            preview.innerHTML = '';
+
+            icons.forEach(icon => {
+                // 未选中状态
+                const canvas1 = createCanvas();
+                const ctx1 = canvas1.getContext('2d');
+                icon.draw(ctx1, false);
+                preview.appendChild(canvas1);
+                downloadCanvas(canvas1, `${icon.name}.png`);
+
+                // 选中状态
+                const canvas2 = createCanvas();
+                const ctx2 = canvas2.getContext('2d');
+                icon.draw(ctx2, true);
+                preview.appendChild(canvas2);
+                downloadCanvas(canvas2, `${icon.name}-active.png`);
+            });
+
+            alert('所有图标已生成并下载！请将下载的PNG文件放入项目的images目录中。');
+        }
+
+        // 添加roundRect方法支持（旧版浏览器兼容）
+        if (!CanvasRenderingContext2D.prototype.roundRect) {
+            CanvasRenderingContext2D.prototype.roundRect = function(x, y, width, height, radius) {
+                this.beginPath();
+                this.moveTo(x + radius, y);
+                this.lineTo(x + width - radius, y);
+                this.quadraticCurveTo(x + width, y, x + width, y + radius);
+                this.lineTo(x + width, y + height - radius);
+                this.quadraticCurveTo(x + width, y + height, x + width - radius, y + height);
+                this.lineTo(x + radius, y + height);
+                this.quadraticCurveTo(x, y + height, x, y + height - radius);
+                this.lineTo(x, y + radius);
+                this.quadraticCurveTo(x, y, x + radius, y);
+                this.closePath();
+            };
+        }
+    </script>
+
+    <div style="margin-top: 40px; padding: 20px; background: #e8f5e8; border-radius: 8px;">
+        <h3>使用说明：</h3>
+        <ol>
+            <li>点击"生成所有图标"按钮</li>
+            <li>浏览器会自动下载8个PNG图标文件</li>
+            <li>将下载的文件放入项目的 <code>images/</code> 目录</li>
+            <li>确保文件名正确：
+                <ul>
+                    <li>home.png, home-active.png</li>
+                    <li>task.png, task-active.png</li>
+                    <li>chat.png, chat-active.png</li>
+                    <li>profile.png, profile-active.png</li>
+                </ul>
+            </li>
+            <li>重新编译小程序即可</li>
+        </ol>
+    </div>
+</body>
+</html>
