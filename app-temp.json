@@ -1,0 +1,80 @@
+{
+  "pages": [
+    "pages/index/index",
+    "pages/login/login",
+    "pages/role-select/role-select",
+    "pages/verify/verify",
+    "pages/profile/profile",
+    "pages/task-publish/task-publish",
+    "pages/task-list/task-list",
+    "pages/task-detail/task-detail",
+    "pages/chat-list/chat-list",
+    "pages/chat/chat",
+    "pages/order-list/order-list",
+    "pages/order-detail/order-detail",
+    "pages/promotion/promotion",
+    "pages/settings/settings",
+    "pages/search/search",
+    "pages/wallet/wallet",
+    "pages/notifications/notifications",
+    "pages/feedback/feedback",
+    "pages/about/about",
+    "pages/agreement/agreement"
+  ],
+  "window": {
+    "backgroundTextStyle": "light",
+    "navigationBarBackgroundColor": "#36D399",
+    "navigationBarTitleText": "校园辅导",
+    "navigationBarTextStyle": "white",
+    "backgroundColor": "#f8f9fa"
+  },
+  "tabBar": {
+    "color": "#7A7E83",
+    "selectedColor": "#36D399",
+    "backgroundColor": "#ffffff",
+    "borderStyle": "black",
+    "list": [
+      {
+        "pagePath": "pages/index/index",
+        "text": "首页"
+      },
+      {
+        "pagePath": "pages/task-list/task-list",
+        "text": "任务"
+      },
+      {
+        "pagePath": "pages/chat-list/chat-list",
+        "text": "消息"
+      },
+      {
+        "pagePath": "pages/profile/profile",
+        "text": "我的"
+      }
+    ]
+  },
+  "usingComponents": {
+    "van-button": "@vant/weapp/button/index",
+    "van-card": "@vant/weapp/card/index",
+    "van-cell": "@vant/weapp/cell/index",
+    "van-cell-group": "@vant/weapp/cell-group/index",
+    "van-field": "@vant/weapp/field/index",
+    "van-picker": "@vant/weapp/picker/index",
+    "van-popup": "@vant/weapp/popup/index",
+    "van-toast": "@vant/weapp/toast/index",
+    "van-dialog": "@vant/weapp/dialog/index",
+    "van-uploader": "@vant/weapp/uploader/index",
+    "van-step": "@vant/weapp/step/index",
+    "van-steps": "@vant/weapp/steps/index",
+    "van-datetime-picker": "@vant/weapp/datetime-picker/index",
+    "van-tag": "@vant/weapp/tag/index",
+    "van-icon": "@vant/weapp/icon/index",
+    "van-loading": "@vant/weapp/loading/index",
+    "van-empty": "@vant/weapp/empty/index",
+    "van-divider": "@vant/weapp/divider/index",
+    "van-switch": "@vant/weapp/switch/index",
+    "van-rate": "@vant/weapp/rate/index"
+  },
+  "style": "v2",
+  "sitemapLocation": "sitemap.json",
+  "lazyCodeLoading": "requiredComponents"
+}
