@@ -1,0 +1,121 @@
+<!--pages/task-list/task-list.wxml-->
+<view class="task-list-container">
+  <!-- 筛选栏 -->
+  <view class="filter-section">
+    <scroll-view class="filter-scroll" scroll-x>
+      <view class="filter-item {{filterType === 'all' ? 'active' : ''}}" 
+            bindtap="setFilter" data-type="all">
+        全部
+      </view>
+      <view class="filter-item {{filterType === 'homework' ? 'active' : ''}}" 
+            bindtap="setFilter" data-type="homework">
+        作业辅导
+      </view>
+      <view class="filter-item {{filterType === 'thesis' ? 'active' : ''}}" 
+            bindtap="setFilter" data-type="thesis">
+        论文指导
+      </view>
+      <view class="filter-item {{filterType === 'review' ? 'active' : ''}}" 
+            bindtap="setFilter" data-type="review">
+        复习备考
+      </view>
+      <view class="filter-item {{filterType === 'other' ? 'active' : ''}}" 
+            bindtap="setFilter" data-type="other">
+        其他
+      </view>
+    </scroll-view>
+    
+    <view class="sort-btn" bindtap="showSortPicker">
+      <van-icon name="sort" size="32rpx" />
+      <text>{{sortText}}</text>
+    </view>
+  </view>
+
+  <!-- 任务列表 -->
+  <view class="task-list">
+    <view wx:if="{{loading}}" class="loading-section">
+      <van-loading type="spinner" size="48rpx" />
+      <text>加载中...</text>
+    </view>
+    
+    <view wx:elif="{{taskList.length === 0}}" class="empty-section">
+      <van-empty description="暂无任务" />
+    </view>
+    
+    <view wx:else>
+      <view class="task-item" 
+            wx:for="{{taskList}}" 
+            wx:key="_id"
+            bindtap="goToTaskDetail"
+            data-task="{{item}}">
+        
+        <!-- 任务头部 -->
+        <view class="task-header">
+          <view class="task-title">{{item.title}}</view>
+          <view class="task-type">
+            <van-tag size="small" type="primary" plain>{{item.typeText}}</van-tag>
+          </view>
+        </view>
+        
+        <!-- 课程信息 -->
+        <view class="course-info">
+          <van-icon name="bookmark-o" size="28rpx" color="#666" />
+          <text>{{item.course}}</text>
+        </view>
+        
+        <!-- 任务描述 -->
+        <view class="task-desc">{{item.description}}</view>
+        
+        <!-- 任务详情 -->
+        <view class="task-details">
+          <view class="detail-item">
+            <van-icon name="location-o" size="28rpx" color="#666" />
+            <text>{{item.tutorModeText}}</text>
+            <text wx:if="{{item.location}}" class="location">（{{item.location}}）</text>
+          </view>
+          
+          <view class="detail-item">
+            <van-icon name="clock-o" size="28rpx" color="#666" />
+            <text>{{item.expectedTime}}</text>
+          </view>
+        </view>
+        
+        <!-- 任务底部 -->
+        <view class="task-footer">
+          <view class="publisher-info">
+            <image class="avatar" src="{{item.publisherAvatar || '/images/default-avatar.png'}}" />
+            <text class="publisher-name">{{item.publisherName}}</text>
+            <van-tag wx:if="{{item.publisherVerified}}" size="small" type="success" plain>已认证</van-tag>
+          </view>
+          
+          <view class="price-info">
+            <text class="price">¥{{item.budget}}</text>
+            <text class="price-unit">预算</text>
+          </view>
+        </view>
+        
+        <!-- 发布时间 -->
+        <view class="publish-time">{{item.createTimeText}}</view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 发布按钮 -->
+  <view class="publish-btn" bindtap="goToPublish">
+    <van-icon name="plus" size="48rpx" color="white" />
+  </view>
+</view>
+
+<!-- 排序选择器 -->
+<van-popup show="{{showSort}}" position="bottom" bind:close="closeSortPicker">
+  <van-picker
+    columns="{{sortColumns}}"
+    bind:confirm="onSortConfirm"
+    bind:cancel="closeSortPicker"
+    show-toolbar
+    title="选择排序方式"
+  />
+</van-popup>
+
+<!-- Toast组件 -->
+<van-toast id="van-toast" />
