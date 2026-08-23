@@ -1,0 +1,108 @@
+<!--pages/role-select/role-select.wxml-->
+<view class="role-select-container">
+  <!-- 顶部说明 -->
+  <view class="header-section">
+    <view class="title">选择您的身份</view>
+    <view class="subtitle">请选择您在平台上的主要身份，后续可以随时切换</view>
+  </view>
+
+  <!-- 身份选择卡片 -->
+  <view class="roles-section">
+    <!-- 需求方身份 -->
+    <view 
+      class="role-card {{selectedRole === 'demander' ? 'selected' : ''}}" 
+      bindtap="selectRole" 
+      data-role="demander"
+    >
+      <view class="role-icon">
+        <van-icon name="edit" size="80rpx" color="{{selectedRole === 'demander' ? '#36D399' : '#6B7280'}}" />
+      </view>
+      <view class="role-info">
+        <view class="role-title">我要找辅导</view>
+        <view class="role-desc">发布学习需求，寻找优质辅导者</view>
+        <view class="role-features">
+          <view class="feature-item">
+            <van-icon name="passed" size="24rpx" />
+            <text>快速发布任务</text>
+          </view>
+          <view class="feature-item">
+            <van-icon name="passed" size="24rpx" />
+            <text>筛选优质辅导者</text>
+          </view>
+          <view class="feature-item">
+            <van-icon name="passed" size="24rpx" />
+            <text>安全交易保障</text>
+          </view>
+        </view>
+      </view>
+      <view class="role-badge" wx:if="{{selectedRole === 'demander'}}">
+        <van-icon name="success" size="32rpx" color="white" />
+      </view>
+    </view>
+
+    <!-- 辅导者身份 -->
+    <view 
+      class="role-card {{selectedRole === 'tutor' ? 'selected' : ''}}" 
+      bindtap="selectRole" 
+      data-role="tutor"
+    >
+      <view class="role-icon">
+        <van-icon name="friends-o" size="80rpx" color="{{selectedRole === 'tutor' ? '#36D399' : '#6B7280'}}" />
+      </view>
+      <view class="role-info">
+        <view class="role-title">我要接单</view>
+        <view class="role-desc">分享知识技能，获得丰厚报酬</view>
+        <view class="role-features">
+          <view class="feature-item">
+            <van-icon name="passed" size="24rpx" />
+            <text>灵活接单时间</text>
+          </view>
+          <view class="feature-item">
+            <van-icon name="passed" size="24rpx" />
+            <text>展示专业技能</text>
+          </view>
+          <view class="feature-item">
+            <van-icon name="passed" size="24rpx" />
+            <text>获得稳定收入</text>
+          </view>
+        </view>
+      </view>
+      <view class="role-badge" wx:if="{{selectedRole === 'tutor'}}">
+        <van-icon name="success" size="32rpx" color="white" />
+      </view>
+    </view>
+  </view>
+
+  <!-- 温馨提示 -->
+  <view class="tips-section">
+    <view class="tips-title">
+      <van-icon name="info-o" size="32rpx" color="#F59E0B" />
+      <text>温馨提示</text>
+    </view>
+    <view class="tips-content">
+      <text>• 选择身份后可在个人中心随时切换</text>
+      <text>• 建议先完成校园认证以获得更多功能</text>
+      <text>• 辅导者需要设置技能标签和资质信息</text>
+    </view>
+  </view>
+
+  <!-- 确认按钮 -->
+  <view class="confirm-section">
+    <van-button 
+      type="primary" 
+      class="confirm-btn" 
+      bindtap="confirmRole"
+      disabled="{{!selectedRole || confirmLoading}}"
+      loading="{{confirmLoading}}"
+    >
+      确认选择
+    </van-button>
+    
+    <view class="skip-btn" bindtap="skipSelection">
+      <text>暂时跳过</text>
+    </view>
+  </view>
+</view>
+
+<!-- Toast组件 -->
+<van-toast id="van-toast" />
