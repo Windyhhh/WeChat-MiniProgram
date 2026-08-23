@@ -1,0 +1,198 @@
+<!--pages/profile/profile.wxml-->
+<view class="profile-container">
+  <!-- 用户信息卡片 -->
+  <view class="user-card">
+    <view class="user-info">
+      <image class="avatar" src="{{userInfo.avatar || '/images/default-avatar.png'}}" mode="aspectFill" bindtap="changeAvatar"></image>
+      <view class="user-details">
+        <view class="user-name">
+          <text>{{userInfo.nickname || '未设置昵称'}}</text>
+          <van-icon wx:if="{{userInfo.isVerified === true}}" name="passed" size="32rpx" color="#36D399" />
+        </view>
+        <view class="user-school">{{userInfo.school || '未认证'}}</view>
+        <view class="user-role">
+          <van-tag type="{{userInfo.role === 'demander' ? 'primary' : 'success'}}" size="small">
+            {{userInfo.role === 'demander' ? '需求方' : userInfo.role === 'tutor' ? '辅导者' : '未选择身份'}}
+          </van-tag>
+        </view>
+      </view>
+      <van-icon name="edit" size="32rpx" color="#6B7280" bindtap="editProfile" />
+    </view>
+    
+    <!-- 认证状态 -->
+    <view class="verify-status" wx:if="{{userInfo.isVerified !== true}}">
+      <view class="verify-content" bindtap="goToVerify">
+        <van-icon name="shield-o" size="32rpx" color="#F59E0B" />
+        <text class="verify-text">
+          {{userInfo.isVerified === 'pending' ? '认证审核中' : '未完成认证'}}
+        </text>
+        <van-icon name="arrow" size="24rpx" color="#F59E0B" />
+      </view>
+    </view>
+  </view>
+
+  <!-- 数据统计 -->
+  <view class="stats-card">
+    <view class="stat-item" bindtap="goToOrderList">
+      <view class="stat-number">{{stats.orderCount}}</view>
+      <view class="stat-label">订单数</view>
+    </view>
+    <view class="stat-item" wx:if="{{userInfo.role === 'tutor'}}">
+      <view class="stat-number">{{stats.rating}}</view>
+      <view class="stat-label">评分</view>
+    </view>
+    <view class="stat-item" wx:if="{{userInfo.role === 'tutor'}}">
+      <view class="stat-number">¥{{stats.totalEarnings}}</view>
+      <view class="stat-label">总收入</view>
+    </view>
+    <view class="stat-item" wx:if="{{userInfo.role === 'demander'}}">
+      <view class="stat-number">{{stats.taskCount}}</view>
+      <view class="stat-label">发布任务</view>
+    </view>
+  </view>
+
+  <!-- 辅导者专属区域 -->
+  <view class="tutor-section" wx:if="{{userInfo.role === 'tutor'}}">
+    <!-- 技能标签 -->
+    <view class="section-card">
+      <view class="section-header">
+        <view class="section-title">技能标签</view>
+        <van-icon name="edit" size="28rpx" color="#6B7280" bindtap="editSkills" />
+      </view>
+      <view class="skills-content">
+        <van-tag 
+          wx:for="{{userInfo.tags}}" 
+          wx:key="index" 
+          type="primary" 
+          size="small"
+          custom-style="margin-right: 16rpx; margin-bottom: 12rpx;"
+        >
+          {{item}}
+        </van-tag>
+        <view class="add-skill" wx:if="{{userInfo.tags.length < 5}}" bindtap="editSkills">
+          <van-icon name="plus" size="24rpx" />
+          <text>添加标签</text>
+        </view>
+      </view>
+    </view>
+
+    <!-- 钱包 -->
+    <view class="section-card" bindtap="goToWallet">
+      <view class="wallet-content">
+        <view class="wallet-info">
+          <van-icon name="gold-coin-o" size="40rpx" color="#F59E0B" />
+          <view class="wallet-details">
+            <view class="wallet-balance">余额：¥{{userInfo.balance || 0}}</view>
+            <view class="wallet-desc">可提现金额</view>
+          </view>
+        </view>
+        <van-icon name="arrow" size="24rpx" color="#6B7280" />
+      </view>
+    </view>
+  </view>
+
+  <!-- 功能菜单 -->
+  <view class="menu-section">
+    <van-cell-group>
+      <van-cell 
+        title="我的订单" 
+        icon="orders-o" 
+        is-link 
+        bindtap="goToOrderList"
+      />
+      <van-cell 
+        title="我的发布" 
+        icon="edit" 
+        is-link 
+        bindtap="goToMyTasks"
+        wx:if="{{userInfo.role === 'demander'}}"
+      />
+      <van-cell 
+        title="推广中心" 
+        icon="gift-o" 
+        is-link 
+        bindtap="goToPromotion"
+      />
+      <van-cell 
+        title="切换身份" 
+        icon="exchange" 
+        is-link 
+        bindtap="switchRole"
+      />
+      <van-cell 
+        title="设置" 
+        icon="setting-o" 
+        is-link 
+        bindtap="goToSettings"
+      />
+      <van-cell 
+        title="客服帮助" 
+        icon="service-o" 
+        is-link 
+        bindtap="contactService"
+      />
+    </van-cell-group>
+  </view>
+</view>
+
+<!-- Toast组件 -->
+<van-toast id="van-toast" />
+
+<!-- 编辑资料弹窗 -->
+<van-popup 
+  show="{{showEditProfile}}" 
+  position="bottom" 
+  round 
+  bind:close="closeEditProfile"
+>
+  <view class="edit-popup">
+    <view class="popup-header">
+      <text>编辑资料</text>
+      <van-icon name="cross" size="32rpx" bindtap="closeEditProfile" />
+    </view>
+    <van-field
+      label="昵称"
+      value="{{editForm.nickname}}"
+      placeholder="请输入昵称"
+      bind:input="onNicknameInput"
+      maxlength="20"
+    />
+    <view class="popup-actions">
+      <van-button type="primary" size="small" bindtap="saveProfile" loading="{{saveLoading}}">
+        保存
+      </van-button>
+    </view>
+  </view>
+</van-popup>
+
+<!-- 技能编辑弹窗 -->
+<van-popup
+  show="{{showEditSkills}}"
+  position="bottom"
+  round
+  bind:close="closeEditSkills"
+>
+  <view class="skills-popup">
+    <view class="popup-header">
+      <text>编辑技能标签</text>
+      <van-icon name="cross" size="32rpx" bindtap="closeEditSkills" />
+    </view>
+    <view class="skills-tips">最多选择5个技能标签</view>
+    <view class="skills-grid">
+      <view
+        class="skill-option {{selectedSkills.includes(item) ? 'selected' : ''}}"
+        wx:for="{{skillOptions}}"
+        wx:key="index"
+        bindtap="toggleSkill"
+        data-skill="{{item}}"
+      >
+        {{item}}
+      </view>
+    </view>
+    <view class="popup-actions">
+      <van-button type="primary" size="small" bindtap="saveSkills" loading="{{saveLoading}}">
+        保存
+      </van-button>
+    </view>
+  </view>
+</van-popup>
