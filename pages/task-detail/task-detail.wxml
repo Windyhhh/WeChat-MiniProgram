@@ -1,0 +1,236 @@
+<!--pages/task-detail/task-detail.wxml-->
+<view class="task-detail-container">
+  <view wx:if="{{loading}}" class="loading-section">
+    <van-loading type="spinner" size="48rpx" />
+    <text>加载中...</text>
+  </view>
+  
+  <view wx:elif="{{!task}}" class="empty-section">
+    <van-empty description="任务不存在" />
+  </view>
+  
+  <view wx:else>
+    <!-- 任务基本信息 -->
+    <view class="task-info-section">
+      <view class="task-header">
+        <view class="task-title">{{task.title}}</view>
+        <view class="task-status">
+          <van-tag type="{{task.status === 'pending' ? 'primary' : 'success'}}" size="small">
+            {{task.statusText}}
+          </van-tag>
+        </view>
+      </view>
+      
+      <view class="course-info">
+        <van-icon name="bookmark-o" size="32rpx" color="#36D399" />
+        <text>{{task.course}}</text>
+        <van-tag size="small" type="primary" plain>{{task.typeText}}</van-tag>
+      </view>
+      
+      <view class="price-info">
+        <text class="price">¥{{task.budget}}</text>
+        <text class="price-label">预算</text>
+      </view>
+    </view>
+
+    <!-- 任务详情 -->
+    <view class="task-content-section">
+      <view class="section-title">任务描述</view>
+      <view class="task-description">{{task.description}}</view>
+      
+      <!-- 任务图片 -->
+      <view wx:if="{{task.images && task.images.length > 0}}" class="task-images">
+        <view class="section-title">相关图片</view>
+        <view class="image-list">
+          <image 
+            wx:for="{{task.images}}" 
+            wx:key="index"
+            src="{{item.url}}" 
+            class="task-image"
+            mode="aspectFill"
+            bindtap="previewImage"
+            data-index="{{index}}"
+          />
+        </view>
+      </view>
+    </view>
+
+    <!-- 任务要求 -->
+    <view class="task-requirements-section">
+      <view class="section-title">任务要求</view>
+      
+      <van-cell-group>
+        <van-cell title="辅导方式" value="{{task.tutorModeText}}" />
+        <van-cell 
+          wx:if="{{task.location}}"
+          title="辅导地点" 
+          value="{{task.location}}" 
+        />
+        <van-cell title="期望完成时间" value="{{task.expectedTime}}" />
+        <van-cell title="发布时间" value="{{task.createTimeText}}" />
+      </van-cell-group>
+    </view>
+
+    <!-- 发布者信息 -->
+    <view class="publisher-section">
+      <view class="section-title">发布者信息</view>
+      
+      <view class="publisher-info">
+        <image class="publisher-avatar" src="{{task.publisherAvatar || '/images/default-avatar.png'}}" />
+        <view class="publisher-details">
+          <view class="publisher-name">
+            <text>{{task.publisherName}}</text>
+            <van-tag wx:if="{{task.publisherVerified}}" size="small" type="success" plain>已认证</van-tag>
+          </view>
+          <view class="publisher-school">{{task.publisherSchool}}</view>
+        </view>
+        
+        <van-button 
+          wx:if="{{canContact}}"
+          type="primary" 
+          size="small" 
+          bindtap="contactPublisher"
+        >
+          联系TA
+        </van-button>
+      </view>
+    </view>
+
+    <!-- 接单者列表（发布者视角） -->
+    <view wx:if="{{isPublisher && applicants.length > 0}}" class="applicants-section">
+      <view class="section-title">接单申请（{{applicants.length}}）</view>
+      
+      <view class="applicant-list">
+        <view 
+          class="applicant-item" 
+          wx:for="{{applicants}}" 
+          wx:key="_id"
+        >
+          <view class="applicant-info">
+            <image class="applicant-avatar" src="{{item.avatar || '/images/default-avatar.png'}}" />
+            <view class="applicant-details">
+              <view class="applicant-name">
+                <text>{{item.name}}</text>
+                <van-tag wx:if="{{item.isVerified}}" size="small" type="success" plain>已认证</van-tag>
+              </view>
+              <view class="applicant-school">{{item.school}}</view>
+              <view class="applicant-tags">
+                <van-tag 
+                  wx:for="{{item.tags}}" 
+                  wx:for-item="tag"
+                  wx:key="index"
+                  size="small" 
+                  type="primary" 
+                  plain
+                >
+                  {{tag}}
+                </van-tag>
+              </view>
+            </view>
+          </view>
+          
+          <view class="applicant-reason">
+            <text class="reason-label">接单理由：</text>
+            <text class="reason-content">{{item.reason}}</text>
+          </view>
+          
+          <view class="applicant-actions">
+            <van-button 
+              type="default" 
+              size="small" 
+              bindtap="contactApplicant"
+              data-applicant="{{item}}"
+            >
+              联系TA
+            </van-button>
+            <van-button 
+              type="primary" 
+              size="small" 
+              bindtap="confirmApplicant"
+              data-applicant="{{item}}"
+            >
+              选择TA
+            </van-button>
+          </view>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 底部操作栏 -->
+  <view wx:if="{{task && !loading}}" class="bottom-actions">
+    <!-- 辅导者视角 -->
+    <view wx:if="{{canApply}}" class="action-buttons">
+      <van-button 
+        type="primary" 
+        size="large" 
+        bindtap="applyTask"
+        loading="{{applyLoading}}"
+        disabled="{{applyLoading}}"
+      >
+        我要接单
+      </van-button>
+    </view>
+    
+    <!-- 已申请状态 -->
+    <view wx:elif="{{hasApplied}}" class="action-buttons">
+      <van-button type="default" size="large" disabled>
+        已申请接单
+      </van-button>
+    </view>
+    
+    <!-- 发布者视角 -->
+    <view wx:elif="{{isPublisher}}" class="action-buttons">
+      <van-button 
+        wx:if="{{task.status === 'pending'}}"
+        type="default" 
+        size="large" 
+        bindtap="editTask"
+      >
+        编辑任务
+      </van-button>
+      <van-button 
+        wx:if="{{task.status === 'pending'}}"
+        type="danger" 
+        size="large" 
+        bindtap="cancelTask"
+      >
+        取消任务
+      </van-button>
+    </view>
+  </view>
+</view>
+
+<!-- 接单申请弹窗 -->
+<van-popup show="{{showApplyModal}}" position="bottom" bind:close="closeApplyModal">
+  <view class="apply-modal">
+    <view class="modal-title">申请接单</view>
+    
+    <van-field
+      label="接单理由"
+      type="textarea"
+      value="{{applyReason}}"
+      placeholder="请简单介绍您的相关经验和优势..."
+      bind:input="onApplyReasonInput"
+      autosize
+      maxlength="200"
+      show-word-limit
+      required
+    />
+    
+    <view class="modal-actions">
+      <van-button type="default" bindtap="closeApplyModal">取消</van-button>
+      <van-button 
+        type="primary" 
+        bindtap="submitApply"
+        loading="{{submitLoading}}"
+        disabled="{{!applyReason || submitLoading}}"
+      >
+        提交申请
+      </van-button>
+    </view>
+  </view>
+</van-popup>
+
+<!-- Toast组件 -->
+<van-toast id="van-toast" />
