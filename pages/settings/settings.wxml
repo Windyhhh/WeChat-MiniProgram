@@ -1,0 +1,141 @@
+<!--pages/settings/settings.wxml-->
+<view class="settings-container">
+  <!-- 通知设置 -->
+  <view class="settings-section">
+    <view class="section-title">通知设置</view>
+    <van-cell-group>
+      <van-cell title="新消息通知" is-link>
+        <van-switch 
+          slot="right-icon" 
+          checked="{{settings.notifications.newMessage}}"
+          data-type="newMessage"
+          bind:change="onNotificationChange"
+        />
+      </van-cell>
+      <van-cell title="新订单通知" is-link>
+        <van-switch 
+          slot="right-icon" 
+          checked="{{settings.notifications.newOrder}}"
+          data-type="newOrder"
+          bind:change="onNotificationChange"
+        />
+      </van-cell>
+      <van-cell title="任务更新通知" is-link>
+        <van-switch 
+          slot="right-icon" 
+          checked="{{settings.notifications.taskUpdate}}"
+          data-type="taskUpdate"
+          bind:change="onNotificationChange"
+        />
+      </van-cell>
+      <van-cell title="系统公告" is-link>
+        <van-switch 
+          slot="right-icon" 
+          checked="{{settings.notifications.systemNotice}}"
+          data-type="systemNotice"
+          bind:change="onNotificationChange"
+        />
+      </van-cell>
+    </van-cell-group>
+  </view>
+
+  <!-- 隐私设置 -->
+  <view class="settings-section">
+    <view class="section-title">隐私设置</view>
+    <van-cell-group>
+      <van-cell title="显示手机号" is-link>
+        <van-switch 
+          slot="right-icon" 
+          checked="{{settings.privacy.showPhone}}"
+          data-type="showPhone"
+          bind:change="onPrivacyChange"
+        />
+      </van-cell>
+      <van-cell title="显示邮箱" is-link>
+        <van-switch 
+          slot="right-icon" 
+          checked="{{settings.privacy.showEmail}}"
+          data-type="showEmail"
+          bind:change="onPrivacyChange"
+        />
+      </van-cell>
+      <van-cell title="允许搜索" is-link>
+        <van-switch 
+          slot="right-icon" 
+          checked="{{settings.privacy.allowSearch}}"
+          data-type="allowSearch"
+          bind:change="onPrivacyChange"
+        />
+      </van-cell>
+    </van-cell-group>
+  </view>
+
+  <!-- 其他设置 -->
+  <view class="settings-section">
+    <view class="section-title">其他设置</view>
+    <van-cell-group>
+      <van-cell title="自动登录" is-link>
+        <van-switch 
+          slot="right-icon" 
+          checked="{{settings.other.autoLogin}}"
+          data-type="autoLogin"
+          bind:change="onOtherChange"
+        />
+      </van-cell>
+      <van-cell title="深色模式" is-link>
+        <van-switch 
+          slot="right-icon" 
+          checked="{{settings.other.darkMode}}"
+          data-type="darkMode"
+          bind:change="onOtherChange"
+        />
+      </van-cell>
+    </van-cell-group>
+  </view>
+
+  <!-- 存储管理 -->
+  <view class="settings-section">
+    <view class="section-title">存储管理</view>
+    <van-cell-group>
+      <van-cell 
+        title="清理缓存" 
+        value="{{cacheSize}}" 
+        is-link 
+        bindtap="clearCache"
+      />
+    </van-cell-group>
+  </view>
+
+  <!-- 帮助与支持 -->
+  <view class="settings-section">
+    <view class="section-title">帮助与支持</view>
+    <van-cell-group>
+      <van-cell title="检查更新" value="v{{version}}" is-link bindtap="checkUpdate" />
+      <van-cell title="意见反馈" is-link bindtap="feedback" />
+      <van-cell title="联系客服" is-link bindtap="contactService" />
+      <van-cell title="关于我们" is-link bindtap="aboutUs" />
+    </van-cell-group>
+  </view>
+
+  <!-- 法律条款 -->
+  <view class="settings-section">
+    <view class="section-title">法律条款</view>
+    <van-cell-group>
+      <van-cell title="用户协议" is-link bindtap="userAgreement" />
+      <van-cell title="隐私政策" is-link bindtap="privacyPolicy" />
+    </van-cell-group>
+  </view>
+
+  <!-- 退出登录 -->
+  <view class="logout-section">
+    <van-button 
+      type="danger" 
+      size="large" 
+      block 
+      bindtap="logout"
+      loading="{{loading}}"
+    >
+      退出登录
+    </van-button>
+  </view>
+</view>
