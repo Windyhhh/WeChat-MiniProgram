@@ -1,0 +1,157 @@
+<!--pages/order-list/order-list.wxml-->
+<view class="order-list-container">
+  <!-- 状态筛选 -->
+  <view class="status-tabs">
+    <view class="tab-item {{currentTab === 'all' ? 'active' : ''}}" 
+          bindtap="switchTab" data-tab="all">
+      全部
+    </view>
+    <view class="tab-item {{currentTab === 'pending' ? 'active' : ''}}" 
+          bindtap="switchTab" data-tab="pending">
+      待支付
+    </view>
+    <view class="tab-item {{currentTab === 'paid' ? 'active' : ''}}" 
+          bindtap="switchTab" data-tab="paid">
+      待辅导
+    </view>
+    <view class="tab-item {{currentTab === 'in_progress' ? 'active' : ''}}" 
+          bindtap="switchTab" data-tab="in_progress">
+      进行中
+    </view>
+    <view class="tab-item {{currentTab === 'completed' ? 'active' : ''}}" 
+          bindtap="switchTab" data-tab="completed">
+      已完成
+    </view>
+  </view>
+
+  <!-- 订单列表 -->
+  <view class="order-list">
+    <view wx:if="{{loading}}" class="loading-section">
+      <van-loading type="spinner" size="48rpx" />
+      <text>加载中...</text>
+    </view>
+    
+    <view wx:elif="{{orderList.length === 0}}" class="empty-section">
+      <van-empty description="暂无订单" />
+      <van-button type="primary" size="small" bindtap="goToTaskList">
+        去看看任务
+      </van-button>
+    </view>
+    
+    <view wx:else>
+      <view class="order-item" 
+            wx:for="{{orderList}}" 
+            wx:key="_id"
+            bindtap="goToOrderDetail"
+            data-order="{{item}}">
+        
+        <!-- 订单头部 -->
+        <view class="order-header">
+          <view class="order-info">
+            <text class="order-number">订单号：{{item.orderNumber}}</text>
+            <view class="order-status">
+              <van-tag type="{{item.statusType}}" size="small">{{item.statusText}}</van-tag>
+            </view>
+          </view>
+        </view>
+        
+        <!-- 任务信息 -->
+        <view class="task-info">
+          <view class="task-title">{{item.taskTitle}}</view>
+          <view class="task-details">
+            <view class="detail-item">
+              <van-icon name="bookmark-o" size="24rpx" />
+              <text>{{item.taskCourse}}</text>
+            </view>
+            <view class="detail-item">
+              <van-icon name="location-o" size="24rpx" />
+              <text>{{item.taskTutorMode}}</text>
+            </view>
+          </view>
+        </view>
+        
+        <!-- 用户信息 -->
+        <view class="user-info">
+          <image class="user-avatar" src="{{item.otherUserAvatar || '/images/default-avatar.png'}}" />
+          <view class="user-details">
+            <view class="user-name">
+              <text>{{item.otherUserName}}</text>
+              <van-tag wx:if="{{item.otherUserVerified}}" size="small" type="success" plain>已认证</van-tag>
+            </view>
+            <view class="user-role">{{item.otherUserRole}}</view>
+          </view>
+        </view>
+        
+        <!-- 金额信息 -->
+        <view class="amount-info">
+          <view class="amount-details">
+            <view class="amount-item">
+              <text class="label">任务金额：</text>
+              <text class="value">¥{{item.amount}}</text>
+            </view>
+            <view wx:if="{{item.commission > 0}}" class="amount-item">
+              <text class="label">平台佣金：</text>
+              <text class="value">¥{{item.commission}}</text>
+            </view>
+            <view wx:if="{{item.isFree}}" class="free-tag">
+              <van-tag type="success" size="small">免佣</van-tag>
+            </view>
+          </view>
+          <view class="total-amount">
+            <text class="total-label">{{userRole === 'demander' ? '需支付' : '可获得'}}：</text>
+            <text class="total-value">¥{{userRole === 'demander' ? item.payAmount : item.receiveAmount}}</text>
+          </view>
+        </view>
+        
+        <!-- 操作按钮 -->
+        <view class="order-actions">
+          <!-- 待支付状态 -->
+          <view wx:if="{{item.status === 'pending' && userRole === 'demander'}}" class="action-buttons">
+            <van-button type="default" size="small" bindtap="cancelOrder" data-order="{{item}}" catchtap="true">
+              取消订单
+            </van-button>
+            <van-button type="primary" size="small" bindtap="payOrder" data-order="{{item}}" catchtap="true">
+              立即支付
+            </van-button>
+          </view>
+          
+          <!-- 待辅导状态 -->
+          <view wx:elif="{{item.status === 'paid'}}" class="action-buttons">
+            <van-button type="default" size="small" bindtap="contactOther" data-order="{{item}}" catchtap="true">
+              联系对方
+            </van-button>
+            <van-button type="primary" size="small" bindtap="startTutoring" data-order="{{item}}" catchtap="true">
+              开始辅导
+            </van-button>
+          </view>
+          
+          <!-- 进行中状态 -->
+          <view wx:elif="{{item.status === 'in_progress'}}" class="action-buttons">
+            <van-button type="default" size="small" bindtap="contactOther" data-order="{{item}}" catchtap="true">
+              联系对方
+            </van-button>
+            <van-button wx:if="{{userRole === 'demander'}}" type="primary" size="small" bindtap="confirmComplete" data-order="{{item}}" catchtap="true">
+              确认完成
+            </van-button>
+          </view>
+          
+          <!-- 已完成状态 -->
+          <view wx:elif="{{item.status === 'completed'}}" class="action-buttons">
+            <van-button type="default" size="small" bindtap="contactOther" data-order="{{item}}" catchtap="true">
+              联系对方
+            </van-button>
+            <van-button wx:if="{{!item.isRated}}" type="primary" size="small" bindtap="rateOrder" data-order="{{item}}" catchtap="true">
+              评价
+            </van-button>
+          </view>
+        </view>
+        
+        <!-- 创建时间 -->
+        <view class="order-time">{{item.createTimeText}}</view>
+      </view>
+    </view>
+  </view>
+</view>
+
+<!-- Toast组件 -->
+<van-toast id="van-toast" />
