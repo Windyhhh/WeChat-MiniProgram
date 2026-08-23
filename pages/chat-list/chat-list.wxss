@@ -1,0 +1,138 @@
+/* pages/chat-list/chat-list.wxss */
+.chat-list-container {
+  background-color: #f8f9fa;
+  min-height: 100vh;
+}
+
+.search-section {
+  background-color: white;
+  padding: 16rpx 32rpx;
+  border-bottom: 1rpx solid #E5E7EB;
+}
+
+.chat-list {
+  background-color: white;
+}
+
+.loading-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 120rpx 32rpx;
+  color: #6B7280;
+}
+
+.loading-section text {
+  margin-top: 16rpx;
+  font-size: 28rpx;
+}
+
+.empty-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 120rpx 32rpx;
+}
+
+.empty-section van-button {
+  margin-top: 32rpx;
+}
+
+.chat-item {
+  display: flex;
+  align-items: center;
+  padding: 32rpx;
+  border-bottom: 1rpx solid #F3F4F6;
+  background-color: white;
+}
+
+.chat-item:active {
+  background-color: #F9FAFB;
+}
+
+.chat-avatar {
+  position: relative;
+  margin-right: 24rpx;
+}
+
+.chat-avatar image {
+  width: 96rpx;
+  height: 96rpx;
+  border-radius: 50%;
+}
+
+.unread-badge {
+  position: absolute;
+  top: -8rpx;
+  right: -8rpx;
+  background-color: #EF4444;
+  color: white;
+  font-size: 20rpx;
+  padding: 4rpx 8rpx;
+  border-radius: 20rpx;
+  min-width: 32rpx;
+  text-align: center;
+  line-height: 1;
+}
+
+.chat-content {
+  flex: 1;
+  min-width: 0;
+}
+
+.chat-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8rpx;
+}
+
+.chat-name {
+  display: flex;
+  align-items: center;
+  font-size: 32rpx;
+  font-weight: 500;
+  color: #1F2937;
+}
+
+.chat-name text {
+  margin-right: 12rpx;
+}
+
+.chat-time {
+  font-size: 24rpx;
+  color: #9CA3AF;
+  flex-shrink: 0;
+}
+
+.chat-preview {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.last-message {
+  display: flex;
+  align-items: center;
+  font-size: 28rpx;
+  color: #6B7280;
+  flex: 1;
+  min-width: 0;
+}
+
+.last-message van-icon {
+  margin-right: 8rpx;
+}
+
+.last-message text {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.task-tag {
+  margin-left: 16rpx;
+  flex-shrink: 0;
+}
