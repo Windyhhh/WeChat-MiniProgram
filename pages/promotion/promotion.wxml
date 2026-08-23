@@ -1,0 +1,198 @@
+<!--pages/promotion/promotion.wxml-->
+<view class="promotion-container">
+  <!-- 顶部横幅 -->
+  <view class="banner-section">
+    <view class="banner-content">
+      <view class="banner-title">推广赚佣金</view>
+      <view class="banner-subtitle">邀请好友注册，享受免佣特权</view>
+      <image class="banner-image" src="/images/promotion-banner.png" mode="aspectFit" />
+    </view>
+  </view>
+
+  <!-- 我的推广数据 -->
+  <view class="stats-section">
+    <view class="stats-title">我的推广数据</view>
+    <view class="stats-grid">
+      <view class="stat-item">
+        <view class="stat-number">{{stats.inviteCount}}</view>
+        <view class="stat-label">邀请人数</view>
+      </view>
+      <view class="stat-item">
+        <view class="stat-number">{{stats.freeCommissions}}</view>
+        <view class="stat-label">免佣次数</view>
+      </view>
+      <view class="stat-item">
+        <view class="stat-number">¥{{stats.totalReward}}</view>
+        <view class="stat-label">累计奖励</view>
+      </view>
+      <view class="stat-item">
+        <view class="stat-number">{{stats.usedCommissions}}</view>
+        <view class="stat-label">已使用</view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 邀请码 -->
+  <view class="invite-code-section">
+    <view class="section-title">我的邀请码</view>
+    <view class="invite-code-card">
+      <view class="code-display">
+        <text class="code-text">{{inviteCode}}</text>
+        <van-button type="primary" size="small" bindtap="copyInviteCode">
+          复制
+        </van-button>
+      </view>
+      <view class="code-tips">分享邀请码给好友，好友注册时填写即可绑定</view>
+    </view>
+  </view>
+
+  <!-- 推广任务 -->
+  <view class="tasks-section">
+    <view class="section-title">推广任务</view>
+    
+    <view class="task-list">
+      <view class="task-item" wx:for="{{promotionTasks}}" wx:key="id">
+        <view class="task-icon">
+          <van-icon name="{{item.icon}}" size="48rpx" color="{{item.color}}" />
+        </view>
+        <view class="task-content">
+          <view class="task-title">{{item.title}}</view>
+          <view class="task-desc">{{item.description}}</view>
+          <view class="task-reward">奖励：{{item.reward}}</view>
+        </view>
+        <view class="task-progress">
+          <view class="progress-text">{{item.current}}/{{item.target}}</view>
+          <van-progress 
+            percentage="{{item.percentage}}" 
+            stroke-width="8rpx" 
+            color="{{item.color}}"
+            track-color="#F3F4F6"
+          />
+        </view>
+        <view class="task-status">
+          <van-tag 
+            wx:if="{{item.status === 'completed'}}"
+            type="success" 
+            size="small"
+          >
+            已完成
+          </van-tag>
+          <van-tag 
+            wx:elif="{{item.status === 'claimed'}}"
+            type="default" 
+            size="small"
+          >
+            已领取
+          </van-tag>
+          <van-button 
+            wx:elif="{{item.status === 'claimable'}}"
+            type="primary" 
+            size="small"
+            bindtap="claimReward"
+            data-task="{{item}}"
+          >
+            领取
+          </van-button>
+          <van-tag 
+            wx:else
+            type="warning" 
+            size="small"
+          >
+            进行中
+          </van-tag>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 免佣记录 -->
+  <view class="commission-records-section">
+    <view class="section-title">免佣记录</view>
+    
+    <view wx:if="{{commissionRecords.length === 0}}" class="empty-records">
+      <van-empty description="暂无免佣记录" />
+    </view>
+    
+    <view wx:else class="records-list">
+      <view class="record-item" wx:for="{{commissionRecords}}" wx:key="_id">
+        <view class="record-info">
+          <view class="record-title">{{item.title}}</view>
+          <view class="record-desc">{{item.description}}</view>
+          <view class="record-time">{{item.createTimeText}}</view>
+        </view>
+        <view class="record-amount">
+          <text class="amount-value">{{item.amount}}</text>
+          <text class="amount-unit">次</text>
+        </view>
+        <view class="record-status">
+          <van-tag 
+            type="{{item.status === 'used' ? 'default' : 'success'}}" 
+            size="small"
+          >
+            {{item.status === 'used' ? '已使用' : '可用'}}
+          </van-tag>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 分享按钮 -->
+  <view class="share-section">
+    <van-button 
+      type="primary" 
+      class="share-btn" 
+      bindtap="shareInvite"
+      open-type="share"
+    >
+      <van-icon name="share" size="32rpx" />
+      <text>分享邀请</text>
+    </van-button>
+  </view>
+</view>
+
+<!-- 规则说明弹窗 -->
+<van-popup 
+  show="{{showRules}}" 
+  position="bottom" 
+  round 
+  bind:close="closeRules"
+>
+  <view class="rules-popup">
+    <view class="popup-header">
+      <text>推广规则</text>
+      <van-icon name="cross" size="32rpx" bindtap="closeRules" />
+    </view>
+    
+    <scroll-view class="rules-content" scroll-y="true">
+      <view class="rule-item">
+        <view class="rule-title">1. 邀请奖励</view>
+        <view class="rule-desc">
+          • 邀请1人注册并完成认证：获得1次免佣机会<br/>
+          • 邀请3人注册并完成认证：额外获得3次免佣机会 + 5元现金奖励<br/>
+          • 邀请10人注册并完成认证：额外获得10次免佣机会 + 20元现金奖励
+        </view>
+      </view>
+      
+      <view class="rule-item">
+        <view class="rule-title">2. 免佣使用</view>
+        <view class="rule-desc">
+          • 免佣机会可在下单时使用，免除1%平台佣金<br/>
+          • 每个订单只能使用1次免佣机会<br/>
+          • 免佣机会有效期为获得后90天
+        </view>
+      </view>
+      
+      <view class="rule-item">
+        <view class="rule-title">3. 注意事项</view>
+        <view class="rule-desc">
+          • 被邀请人必须在注册时填写您的邀请码<br/>
+          • 被邀请人完成校园认证后，奖励才会发放<br/>
+          • 严禁刷单等作弊行为，一经发现将取消所有奖励
+        </view>
+      </view>
+    </scroll-view>
+  </view>
+</van-popup>
+
+<!-- Toast组件 -->
+<van-toast id="van-toast" />
