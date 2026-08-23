@@ -1,0 +1,153 @@
+<!--pages/index/index.wxml-->
+<view class="page-container">
+  <!-- 用户状态栏 -->
+  <view class="user-status-bar" wx:if="{{userInfo}}">
+    <view class="user-info">
+      <image class="user-avatar" src="{{userInfo.avatar || '/images/default-avatar.png'}}" />
+      <view class="user-details">
+        <view class="user-name">{{userInfo.nickname || '同学'}}</view>
+        <view class="user-status">
+          <van-tag size="small" type="{{userInfo.isVerified ? 'success' : 'warning'}}">
+            {{userInfo.isVerified ? '已认证' : '未认证'}}
+          </van-tag>
+          <van-tag size="small" type="primary">{{roleText}}</van-tag>
+        </view>
+      </view>
+    </view>
+    <view class="user-actions">
+      <van-icon name="bell-o" size="20px" bindtap="goToNotifications" />
+      <van-icon name="search" size="20px" bindtap="goToSearch" />
+    </view>
+  </view>
+
+  <!-- 顶部轮播图 -->
+  <view class="banner-section">
+    <swiper class="banner-swiper" indicator-dots="true" autoplay="true" interval="3000" duration="500">
+      <swiper-item wx:for="{{banners}}" wx:key="index">
+        <image class="banner-image" src="{{item.image}}" mode="aspectFill"></image>
+      </swiper-item>
+    </swiper>
+  </view>
+
+  <!-- 快捷入口 -->
+  <view class="quick-actions card">
+    <view class="quick-action" bindtap="goToPublish">
+      <van-icon name="edit" size="48rpx" color="#36D399" />
+      <text class="action-text">发布任务</text>
+    </view>
+    <view class="quick-action" bindtap="goToTaskList">
+      <van-icon name="orders-o" size="48rpx" color="#3B82F6" />
+      <text class="action-text">接单赚钱</text>
+    </view>
+    <view class="quick-action" bindtap="goToChat">
+      <van-icon name="chat-o" size="48rpx" color="#F59E0B" />
+      <text class="action-text">消息中心</text>
+    </view>
+    <view class="quick-action" bindtap="goToPromotion">
+      <van-icon name="gift-o" size="48rpx" color="#EF4444" />
+      <text class="action-text">推广赚佣</text>
+    </view>
+  </view>
+
+  <!-- 数据统计 -->
+  <view class="stats-section card">
+    <view class="stats-title">平台数据</view>
+    <view class="stats-grid">
+      <view class="stat-item">
+        <view class="stat-number">{{stats.totalTasks}}</view>
+        <view class="stat-label">累计任务</view>
+      </view>
+      <view class="stat-item">
+        <view class="stat-number">{{stats.totalUsers}}</view>
+        <view class="stat-label">注册用户</view>
+      </view>
+      <view class="stat-item">
+        <view class="stat-number">{{stats.totalOrders}}</view>
+        <view class="stat-label">完成订单</view>
+      </view>
+      <view class="stat-item">
+        <view class="stat-number">{{stats.totalAmount}}</view>
+        <view class="stat-label">交易金额</view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 热门任务 -->
+  <view class="hot-tasks-section">
+    <view class="section-header">
+      <view class="section-title">热门任务</view>
+      <view class="section-more" bindtap="goToTaskList">
+        <text>查看更多</text>
+        <van-icon name="arrow" size="24rpx" />
+      </view>
+    </view>
+    
+    <view class="task-list">
+      <view class="task-item card" wx:for="{{hotTasks}}" wx:key="_id" bindtap="goToTaskDetail" data-id="{{item._id}}">
+        <view class="task-header">
+          <view class="task-course">{{item.course}}</view>
+          <view class="task-price">¥{{item.price}}</view>
+        </view>
+        <view class="task-content">
+          <view class="task-title">{{item.title}}</view>
+          <view class="task-desc">{{item.description}}</view>
+        </view>
+        <view class="task-footer">
+          <view class="task-tags">
+            <van-tag wx:for="{{item.tags}}" wx:key="index" wx:for-item="tag" size="small" type="primary">{{tag}}</van-tag>
+          </view>
+          <view class="task-time">{{item.createTimeText}}</view>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 优秀辅导者 -->
+  <view class="excellent-tutors-section">
+    <view class="section-header">
+      <view class="section-title">优秀辅导者</view>
+      <view class="section-more">
+        <text>查看更多</text>
+        <van-icon name="arrow" size="24rpx" />
+      </view>
+    </view>
+    
+    <scroll-view class="tutors-scroll" scroll-x="true">
+      <view class="tutor-item" wx:for="{{excellentTutors}}" wx:key="_id">
+        <image class="tutor-avatar" src="{{item.avatar || '/images/default-avatar.png'}}" mode="aspectFill"></image>
+        <view class="tutor-name">{{item.nickname}}</view>
+        <view class="tutor-school">{{item.school}}</view>
+        <view class="tutor-tags">
+          <van-tag wx:for="{{item.tags}}" wx:key="index" wx:for-item="tag" size="small">{{tag}}</van-tag>
+        </view>
+        <view class="tutor-rating">
+          <van-rate value="{{item.rating}}" size="24rpx" readonly />
+          <text class="rating-text">({{item.orderCount}})</text>
+        </view>
+      </view>
+    </scroll-view>
+  </view>
+
+  <!-- 公告通知 -->
+  <view class="notice-section card" wx:if="{{notice}}">
+    <view class="notice-header">
+      <van-icon name="volume-o" size="32rpx" color="#F59E0B" />
+      <text class="notice-title">平台公告</text>
+    </view>
+    <view class="notice-content">{{notice.content}}</view>
+  </view>
+</view>
+
+<!-- Toast组件 -->
+<van-toast id="van-toast" />
+
+<!-- 登录弹窗 -->
+<van-popup show="{{showLoginPopup}}" position="center" round custom-style="padding: 60rpx 40rpx;">
+  <view class="login-popup">
+    <view class="login-title">欢迎使用校园辅导</view>
+    <view class="login-desc">请先登录以使用完整功能</view>
+    <van-button type="primary" class="login-btn" bindtap="handleLogin" loading="{{loginLoading}}">
+      微信快速登录
+    </van-button>
+  </view>
+</van-popup>
