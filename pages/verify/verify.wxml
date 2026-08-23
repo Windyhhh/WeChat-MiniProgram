@@ -1,0 +1,108 @@
+<!--pages/verify/verify.wxml-->
+<view class="verify-container">
+  <!-- 顶部说明 -->
+  <view class="header-section">
+    <view class="verify-icon">
+      <van-icon name="shield-o" size="80rpx" color="#36D399" />
+    </view>
+    <view class="title">校园认证</view>
+    <view class="subtitle">完成认证后可获得更多功能权限</view>
+  </view>
+
+  <!-- 认证表单 -->
+  <view class="form-section">
+    <!-- 学校选择 -->
+    <van-cell-group>
+      <van-field
+        label="学校"
+        value="{{formData.school}}"
+        placeholder="请选择您的学校"
+        readonly
+        is-link
+        bind:click-input="showSchoolPicker"
+        required
+      />
+    </van-cell-group>
+
+    <!-- 学号输入 -->
+    <van-cell-group custom-style="margin-top: 32rpx;">
+      <van-field
+        label="学号"
+        value="{{formData.studentId}}"
+        placeholder="请输入您的学号"
+        bind:input="onStudentIdInput"
+        type="number"
+        maxlength="12"
+        required
+      />
+    </van-cell-group>
+
+    <!-- 校园卡上传 -->
+    <view class="upload-section">
+      <view class="upload-title">
+        <text>校园卡照片</text>
+        <text class="required">*</text>
+      </view>
+      <view class="upload-tips">请上传清晰的校园卡正面照片，确保学号和姓名清晰可见</view>
+      
+      <van-uploader
+        file-list="{{fileList}}"
+        bind:after-read="afterRead"
+        bind:delete="deleteFile"
+        max-count="1"
+        accept="image"
+        upload-text="上传校园卡"
+        preview-size="200rpx"
+      />
+    </view>
+
+    <!-- 认证说明 -->
+    <view class="info-section">
+      <view class="info-title">
+        <van-icon name="info-o" size="32rpx" color="#3B82F6" />
+        <text>认证说明</text>
+      </view>
+      <view class="info-content">
+        <text>• 认证信息仅用于身份验证，不会泄露给其他用户</text>
+        <text>• 认证通过后将获得"已认证"标识</text>
+        <text>• 认证用户可以发布和接受更多类型的任务</text>
+        <text>• 认证用户享有优先推荐权</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 提交按钮 -->
+  <view class="submit-section">
+    <van-button 
+      type="primary" 
+      class="submit-btn" 
+      bindtap="submitVerification"
+      disabled="{{!canSubmit || submitLoading}}"
+      loading="{{submitLoading}}"
+    >
+      提交认证
+    </van-button>
+    
+    <view class="skip-btn" bindtap="skipVerification">
+      <text>暂时跳过</text>
+    </view>
+  </view>
+</view>
+
+<!-- 学校选择器 -->
+<van-popup 
+  show="{{showSchoolPicker}}" 
+  position="bottom" 
+  bind:close="closeSchoolPicker"
+>
+  <van-picker
+    columns="{{schoolColumns}}"
+    bind:confirm="onSchoolConfirm"
+    bind:cancel="closeSchoolPicker"
+    show-toolbar
+    title="选择学校"
+  />
+</van-popup>
+
+<!-- Toast组件 -->
+<van-toast id="van-toast" />
