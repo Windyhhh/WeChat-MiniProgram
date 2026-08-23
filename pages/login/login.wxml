@@ -1,0 +1,99 @@
+<!--pages/login/login.wxml-->
+<view class="login-container">
+  <!-- 顶部Logo区域 -->
+  <view class="logo-section">
+    <image class="logo" src="/images/logo.png" mode="aspectFit"></image>
+    <view class="app-name">校园辅导</view>
+    <view class="app-slogan">连接校园，共享知识</view>
+  </view>
+
+  <!-- 功能介绍 -->
+  <view class="features-section">
+    <view class="feature-item">
+      <van-icon name="edit" size="48rpx" color="#36D399" />
+      <view class="feature-content">
+        <view class="feature-title">发布需求</view>
+        <view class="feature-desc">快速发布学习辅导需求</view>
+      </view>
+    </view>
+    
+    <view class="feature-item">
+      <van-icon name="friends-o" size="48rpx" color="#3B82F6" />
+      <view class="feature-content">
+        <view class="feature-title">找到辅导</view>
+        <view class="feature-desc">匹配优质校园辅导者</view>
+      </view>
+    </view>
+    
+    <view class="feature-item">
+      <van-icon name="gold-coin-o" size="48rpx" color="#F59E0B" />
+      <view class="feature-content">
+        <view class="feature-title">赚取收益</view>
+        <view class="feature-desc">分享知识获得报酬</view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 登录按钮 -->
+  <view class="login-section">
+    <van-button 
+      type="primary" 
+      class="login-btn" 
+      bindtap="handleLogin"
+      loading="{{loginLoading}}"
+      disabled="{{loginLoading}}"
+    >
+      <van-icon name="wechat" size="36rpx" />
+      <text class="login-text">微信快速登录</text>
+    </van-button>
+    
+    <view class="login-tips">
+      <text>登录即表示同意</text>
+      <text class="link" bindtap="showUserAgreement">《用户协议》</text>
+      <text>和</text>
+      <text class="link" bindtap="showPrivacyPolicy">《隐私政策》</text>
+    </view>
+  </view>
+
+  <!-- 底部装饰 -->
+  <view class="bottom-decoration">
+    <image class="decoration-image" src="/images/login-decoration.png" mode="aspectFit"></image>
+  </view>
+</view>
+
+<!-- Toast组件 -->
+<van-toast id="van-toast" />
+
+<!-- 用户协议弹窗 -->
+<van-popup 
+  show="{{showAgreement}}" 
+  position="center" 
+  round 
+  custom-style="width: 80%; max-height: 70%;"
+  bind:close="closeAgreement"
+>
+  <view class="agreement-popup">
+    <view class="agreement-title">用户协议</view>
+    <scroll-view class="agreement-content" scroll-y="true">
+      <text>{{userAgreementText}}</text>
+    </scroll-view>
+    <van-button type="primary" size="small" bindtap="closeAgreement">我知道了</van-button>
+  </view>
+</van-popup>
+
+<!-- 隐私政策弹窗 -->
+<van-popup 
+  show="{{showPrivacy}}" 
+  position="center" 
+  round 
+  custom-style="width: 80%; max-height: 70%;"
+  bind:close="closePrivacy"
+>
+  <view class="agreement-popup">
+    <view class="agreement-title">隐私政策</view>
+    <scroll-view class="agreement-content" scroll-y="true">
+      <text>{{privacyPolicyText}}</text>
+    </scroll-view>
+    <van-button type="primary" size="small" bindtap="closePrivacy">我知道了</van-button>
+  </view>
+</van-popup>
