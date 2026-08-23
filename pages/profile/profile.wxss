@@ -1,0 +1,293 @@
+/* pages/profile/profile.wxss */
+
+.profile-container {
+  min-height: 100vh;
+  background-color: #f8f9fa;
+  padding-bottom: env(safe-area-inset-bottom);
+}
+
+/* 用户信息卡片 */
+.user-card {
+  background: linear-gradient(135deg, #36D399 0%, #3B82F6 100%);
+  padding: 40rpx 32rpx 32rpx;
+  margin-bottom: 24rpx;
+}
+
+.user-info {
+  display: flex;
+  align-items: center;
+  margin-bottom: 24rpx;
+}
+
+.avatar {
+  width: 120rpx;
+  height: 120rpx;
+  border-radius: 50%;
+  border: 4rpx solid rgba(255, 255, 255, 0.3);
+  margin-right: 24rpx;
+}
+
+.user-details {
+  flex: 1;
+}
+
+.user-name {
+  display: flex;
+  align-items: center;
+  font-size: 36rpx;
+  font-weight: 600;
+  color: white;
+  margin-bottom: 12rpx;
+}
+
+.user-name text {
+  margin-right: 12rpx;
+}
+
+.user-school {
+  font-size: 28rpx;
+  color: rgba(255, 255, 255, 0.8);
+  margin-bottom: 12rpx;
+}
+
+.user-role {
+  margin-top: 8rpx;
+}
+
+/* 认证状态 */
+.verify-status {
+  background-color: rgba(255, 255, 255, 0.15);
+  border-radius: 16rpx;
+  padding: 24rpx;
+  backdrop-filter: blur(10rpx);
+}
+
+.verify-content {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.verify-text {
+  flex: 1;
+  margin-left: 16rpx;
+  font-size: 28rpx;
+  color: white;
+  font-weight: 500;
+}
+
+/* 数据统计 */
+.stats-card {
+  background-color: white;
+  border-radius: 16rpx;
+  padding: 32rpx;
+  margin: 0 32rpx 24rpx;
+  display: flex;
+  justify-content: space-around;
+  box-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.06);
+}
+
+.stat-item {
+  text-align: center;
+  flex: 1;
+}
+
+.stat-number {
+  font-size: 40rpx;
+  font-weight: 700;
+  color: var(--primary-color);
+  margin-bottom: 8rpx;
+}
+
+.stat-label {
+  font-size: 24rpx;
+  color: var(--text-secondary);
+}
+
+/* 辅导者专属区域 */
+.tutor-section {
+  margin: 0 32rpx 24rpx;
+}
+
+.section-card {
+  background-color: white;
+  border-radius: 16rpx;
+  padding: 32rpx;
+  margin-bottom: 24rpx;
+  box-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.06);
+}
+
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24rpx;
+}
+
+.section-title {
+  font-size: 32rpx;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+/* 技能标签 */
+.skills-content {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.add-skill {
+  display: flex;
+  align-items: center;
+  padding: 8rpx 16rpx;
+  border: 2rpx dashed var(--border-color);
+  border-radius: 8rpx;
+  font-size: 24rpx;
+  color: var(--text-secondary);
+}
+
+.add-skill text {
+  margin-left: 8rpx;
+}
+
+/* 钱包 */
+.wallet-content {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.wallet-info {
+  display: flex;
+  align-items: center;
+}
+
+.wallet-details {
+  margin-left: 16rpx;
+}
+
+.wallet-balance {
+  font-size: 32rpx;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 4rpx;
+}
+
+.wallet-desc {
+  font-size: 24rpx;
+  color: var(--text-secondary);
+}
+
+/* 功能菜单 */
+.menu-section {
+  margin: 0 32rpx;
+}
+
+/* 弹窗样式 */
+.edit-popup,
+.skills-popup {
+  padding: 40rpx 32rpx;
+  min-height: 400rpx;
+}
+
+.popup-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 32rpx;
+  font-size: 36rpx;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.popup-actions {
+  margin-top: 40rpx;
+  text-align: center;
+}
+
+/* 技能选择 */
+.skills-tips {
+  font-size: 26rpx;
+  color: var(--text-secondary);
+  margin-bottom: 24rpx;
+  text-align: center;
+}
+
+.skills-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16rpx;
+  margin-bottom: 32rpx;
+}
+
+.skill-option {
+  padding: 16rpx 24rpx;
+  border: 2rpx solid var(--border-color);
+  border-radius: 24rpx;
+  font-size: 26rpx;
+  color: var(--text-secondary);
+  background-color: #f8f9fa;
+  transition: all 0.3s ease;
+}
+
+.skill-option.selected {
+  border-color: var(--primary-color);
+  background-color: var(--primary-color);
+  color: white;
+}
+
+.skill-option:active {
+  transform: scale(0.95);
+}
+
+/* 自定义组件样式覆盖 */
+.van-cell-group {
+  border-radius: 16rpx !important;
+  overflow: hidden;
+  box-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.06);
+}
+
+.van-cell {
+  background-color: white !important;
+}
+
+.van-cell__title {
+  color: var(--text-primary) !important;
+  font-weight: 500 !important;
+}
+
+.van-cell__right-icon {
+  color: var(--text-secondary) !important;
+}
+
+.van-tag {
+  border-radius: 8rpx !important;
+}
+
+/* 响应式适配 */
+@media (max-width: 750rpx) {
+  .user-card {
+    padding: 32rpx 24rpx;
+  }
+  
+  .stats-card,
+  .tutor-section,
+  .menu-section {
+    margin-left: 24rpx;
+    margin-right: 24rpx;
+  }
+  
+  .section-card {
+    padding: 24rpx;
+  }
+  
+  .avatar {
+    width: 100rpx;
+    height: 100rpx;
+  }
+  
+  .user-name {
+    font-size: 32rpx;
+  }
+}
