@@ -1,6 +1,6 @@
 <div align="center">
 
-# 📱 WeChat-MiniProgram
+# 微信小程序合集 | WeChat-MiniProgram
 
 ### A collection of WeChat Mini Programs.
 
